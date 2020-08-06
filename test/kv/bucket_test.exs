@@ -3,8 +3,7 @@ defmodule KV.BucketTest do
   alias KV.Bucket
 
   setup do
-    {:ok, bucket} = Bucket.start_link([])
-    %{bucket: bucket}
+    %{bucket: start_supervised!(Bucket)}
   end
 
   test "stores values by key", %{bucket: bucket} do
