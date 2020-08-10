@@ -28,6 +28,7 @@ defmodule KV.RegistryTest do
   test "throws away randon info messages", %{registry: registry} do
     send(registry, {:foo})
 
+    # Sleeping here is necessary as `handle_info` is async.
     :timer.sleep 1
 
     assert Process.info(registry, :messages) == {:messages, []}
