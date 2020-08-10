@@ -1,6 +1,6 @@
 defmodule KV.Registry do
   use GenServer
-  alias KV.Bucket
+  alias KV.{BucketSupervisor, Bucket}
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, :ok, opts)
@@ -31,7 +31,7 @@ defmodule KV.Registry do
     if Map.has_key?(names, name) do
       {:noreply, state}
     else
-      {:ok, bucket} = Bucket.start_link([])
+      {:ok, bucket} = DynamicSupervisor.start_child(BucketSupervisor, Bucket)
       ref = Process.monitor(bucket)
       refs = Map.put(refs, ref, name)
       names = Map.put(names, name, bucket)
